@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Pixlee Game Excercise</title>
+	<link href='https://fonts.googleapis.com/css?family=Lato:400,700,300' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="stylesheets/bootstrap.min.css">
+	<link rel="stylesheet" href="stylesheets/main.css">
+	<script src="scripts/vendor/prefixfree.min.js"></script>
+</head>
+<body>
+	<div id="startingPage" class="starting-page">
+		<div class="main-title">Proteur</div>
+		<div class="instructions">
+			Create a game where the user’s objective is to correctly guess if a given picture is professionally taken or is user generated content (UGC). We encourage you to use a frontend framework and have fun with the design!
+		</div>
+		<button id="startGame" type="button" class="btn btn-primary btn-lg">Start Game</button>
+	</div>
+	<div id="gamePage"  class="game-page">
+		<div id="images" class="images"></div>
+		<div id="currentScore" class="current-score"></div>
+		<button id="finishGame" type="button" class="btn btn-primary btn-lg">Start Game</button>
+	</div>
+	<div id="postGameModal" class="modal fade" tabindex="-1" role="dialog">
+  	<div class="modal-dialog post-game-modal" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">Thanks for playing!</h4>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="form-group">
+							<label for="playerName">Name</label>
+							<input type="text" class="form-control" id="playerName" placeholder="Your Name">
+						</div>
+						<div class="form-group">
+							<label for="playerEmail">Email address</label>
+							<input type="email" class="form-control" id="playerEmail" placeholder="Your Email">
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button id="playAgain" type="button" class="btn btn-success" data-dismiss="modal" data-dismiss="modal">Submit and Play Again</button>
+					<button id="quit" type="button" class="btn btn-primary" data-dismiss="modal">Submit and Quit</button>
+				</div>
+			</div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+	<div id="postGamePage" class="post-game-page">
+		Post Game Page
+		<div id="finalScore" class="final-score"></div>
+		<button id="submitInfo" type="button" class="btn btn-primary btn-lg">Start Game</button>
+	</div>
+	<script   src="scripts/vendor/jquery-1.12.4.min.js"   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="   crossorigin="anonymous"></script>
+	<script src="scripts/vendor/bootstrap.js"></script>
+	<script src="scripts/main.js"></script>
+</body>
+</html>

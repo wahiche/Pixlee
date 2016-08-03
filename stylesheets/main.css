@@ -1,0 +1,62 @@
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  padding: 15%;
+}
+input:not([type]),
+input[type="email"],
+input[type="text"] {
+  margin: 0em;
+  outline: none;
+  -webkit-appearance: none;
+  tap-highlight-color: rgba(255, 255, 255, 0);
+  line-height: 1.2142em;
+  padding: 0.67861429em 0.5em;
+  font-size: 1em;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #DDDDDD;
+  color: rgba(0, 0, 0, 0.87);
+  border-radius: 0em;
+  box-shadow: none;
+  transition: color 0.1s ease, border-color 0.1s ease;
+  width: 100%;
+  vertical-align: top;
+}
+.main-title {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: .25em 0 ;
+  background-color: slategray;
+  font-size: 2em;
+  text-transform: uppercase;
+  text-align: center;
+}
+.starting-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+.game-page,
+.post-game-page {
+  display: none;
+}
+.post-game-modal {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+}
+.modal.in .modal-dialog {
+  transform: translate(0, -50%);
+}
+.modal-footer {
+  border-top: 0;
+}
