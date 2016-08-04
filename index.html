@@ -26,7 +26,7 @@
 		<div id="currentScore" class="current-score">
 			<div class="btn-group">
 				<button class="btn btn-info btn-lg" type="button"> Score: <span class="badge score">0</span> </button>
-				<button class="btn btn-info btn-lg" type="button"> Pictures Remaining: <span class="badge pics-remaining">15</span> </button>
+				<button class="btn btn-warning btn-lg" type="button"> Pictures Remaining: <span class="badge pics-remaining">15</span> </button>
 			</div>
 		</div>
 		<div id="images" class="images"></div>
@@ -39,21 +39,22 @@
 		<div class="modal-dialog post-game-modal" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title">Thanks for playing!</h4> </div>
+					<h3 class="modal-title">Thanks for playing!</h3>
+					<h4>You correctly answered <span id="finalScore"></span> out of <span id="imagesSeen"></span></h4> </div>
 				<div class="modal-body">
 					<form id="submissionForm">
 						<div class="form-group">
 							<label for="playerName">Name</label>
-							<input type="text" class="form-control" id="playerName" placeholder="Your Name"> </div>
+							<input type="text" name="name" class="form-control" id="playerName" placeholder="Your Name" minlength="2" required> </div>
 						<div class="form-group">
 							<label for="playerEmail">Email address</label>
-							<input type="email" class="form-control" id="playerEmail" placeholder="Your Email"> </div>
+							<input type="email" name="email" class="form-control" id="playerEmail" placeholder="Your Email" required> </div>
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
-								<button id="playAgain" type="submit" class="btn btn-success" data-dismiss="modal" data-dismiss="modal">Submit and Play Again</button>
+								<button id="playAgain" type="submit" class="btn btn-success">Submit and Play Again</button>
 							</div>
 							<div class="btn-group">
-								<button id="quit" type="submit" class="btn btn-primary" data-dismiss="modal">Submit and Quit</button>
+								<button id="quit" type="submit" class="btn btn-primary">Submit and Quit</button>
 							</div>
 						</div>
 					</form>
@@ -70,6 +71,7 @@
 	</div>
 	<div id="leaderBoard"></div>
 	<script src="scripts/vendor/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+	<script src="scripts/vendor/jquery.validate.min.js"></script>
 	<script src="scripts/vendor/bootstrap.js"></script>
 	<script src="scripts/main.js"></script>
 </body>

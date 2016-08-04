@@ -66,6 +66,8 @@ $(function () {
 	//Game Page
 	var currentImage = 0;
 	var playerScore = 0;
+	var picsToUse = 15;
+	var gameLength = 15
 	var picsRemaining = 15;
 	var $scoreBadge = $('.badge.score');
 	var $picsRemainingBadge = $('.badge.pics-remaining');
@@ -84,10 +86,12 @@ $(function () {
 	}
 
 	function nextImage() {
-		if (currentImage === 15) {
+		if (currentImage === gameLength) {
 			$postGameModal.modal({
 				backdrop: 'static'
 			});
+			$('#finalScore').text(playerScore);
+			$('#imagesSeen').text(gameLength);
 		}
 		else {
 			$('#imgThumb' + (currentImage - 1)).hide();
@@ -97,12 +101,10 @@ $(function () {
 	//Post Game Modal
 	var $playAgainBtn = $('#playAgain');
 	var $quitBtn = $('#quit');
-	var userName = $('#playerName');
-	var userEmail = $('#playerEmail');
 
 	function submitPlayerInfo(func) {
-		userName = userName.val();
-		userEmail = userEmail.val();
+		userName = $('#playerName').val();
+		userEmail = $('#playerEmail').val();
 		$.ajax({
 			url: endpointUrl
 			, type: 'post'
@@ -120,11 +122,48 @@ $(function () {
 			}
 		});
 	}
+	$('form').validate({
+		rules: {
+			name: {
+				required: true
+				, minlength: 3
+				, maxlength: 30
+			}
+			, email: {
+				required: true
+				, email: true
+			}
+		}
+		, highlight: function (element) {
+			$(element).closest('.form-group').addClass('has-error');
+		}
+		, unhighlight: function (element) {
+			$(element).closest('.form-group').removeClass('has-error');
+		}
+		, errorElement: 'span'
+		, errorClass: 'help-block'
+		, errorPlacement: function (error, element) {
+			if (element.parent('.input-group').length) {
+				error.insertAfter(element.parent());
+			}
+			else {
+				error.insertAfter(element);
+			}
+		}
+	});
 	$playAgainBtn.on('click', function (event) {
-		submitPlayerInfo(fadeInGamePage());
+		console.log($('form').valid());
+		if ($('form').valid()) {
+			$postGameModal.modal('hide');
+			submitPlayerInfo(fadeInGamePage());
+			startGame();
+		}
 	});
 	$quitBtn.on('click', function (event) {
-		submitPlayerInfo(fadeInStartPage());
+		if ($('form').valid()) {
+			$postGameModal.modal('hide');
+			submitPlayerInfo(fadeInStartPage());
+		}
 	});
 	//Click Events
 	$('#proBtn').on('click', function () {
@@ -132,8 +171,7 @@ $(function () {
 			playerScore++;
 			$scoreBadge.text(playerScore);
 		}
-		else if (itemArray[currentImage].type === 'ugc') {
-		}
+		else if (itemArray[currentImage].type === 'ugc') {}
 		currentImage++;
 		picsRemaining--;
 		$picsRemainingBadge.text(picsRemaining);
@@ -144,22 +182,24 @@ $(function () {
 			playerScore++;
 			$scoreBadge.text(playerScore);
 		}
-		else if (itemArray[currentImage].type === 'pro') {
-			
-		}
+		else if (itemArray[currentImage].type === 'pro') {}
 		currentImage++;
 		picsRemaining--;
 		$picsRemainingBadge.text(picsRemaining);
 		nextImage();
 	});
 	$('#startGame').on('click', function () {
+		startGame();
+	});
+
+	function startGame() {
 		fadeInGamePage();
-		getPhotos('ugc', 10);
-		getPhotos('pro', 10);
+		getPhotos('ugc', picsToUse);
+		getPhotos('pro', picsToUse);
 		setTimeout(function () {
 			loadImages();
 		}, 500)
-	});
+	}
 
 	function resetGame() {
 		playerScore = 0;
