@@ -122,22 +122,17 @@ $(function () {
 	}
 	$playAgainBtn.on('click', function (event) {
 		submitPlayerInfo(fadeInGamePage());
-		console.log("PlayAgain: ", userName, userEmail, endpointUrl);
 	});
 	$quitBtn.on('click', function (event) {
 		submitPlayerInfo(fadeInStartPage());
-		console.log("QUIT: ", userName, userEmail, endpointUrl);
 	});
 	//Click Events
 	$('#proBtn').on('click', function () {
-		console.log("PROF: ", itemArray[currentImage].type, currentImage);
 		if (itemArray[currentImage].type === 'pro') {
-			console.log('proPro');
 			playerScore++;
 			$scoreBadge.text(playerScore);
 		}
 		else if (itemArray[currentImage].type === 'ugc') {
-			console.log('ugcPro');
 		}
 		currentImage++;
 		picsRemaining--;
@@ -145,14 +140,12 @@ $(function () {
 		nextImage();
 	});
 	$('#amateurBtn').on('click', function () {
-		console.log("AMA: ", itemArray[currentImage].type, currentImage);
 		if (itemArray[currentImage].type === 'ugc') {
-			console.log('ugcUgc');
 			playerScore++;
 			$scoreBadge.text(playerScore);
 		}
 		else if (itemArray[currentImage].type === 'pro') {
-			console.log('proUgc');
+			
 		}
 		currentImage++;
 		picsRemaining--;
@@ -166,7 +159,6 @@ $(function () {
 		setTimeout(function () {
 			loadImages();
 		}, 500)
-		console.log("Start Game: ", currentImage);
 	});
 
 	function resetGame() {
