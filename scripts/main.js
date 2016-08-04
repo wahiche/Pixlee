@@ -1,93 +1,183 @@
-$(function(){
+$(function () {
 	//Pages
-	var $startingPage = $('#startingPage'),
-			$gamePage = $('#gamePage'),
-			$postGameModal = $('#postGameModal');
+	var $startingPage = $('#startingPage')
+		, $gamePage = $('#gamePage')
+		, $postGameModal = $('#postGameModal');
 
-	function showStartPage() {
-		$startingPage.show();
-		$gamePage.hide();
-		$postGameModal.hide();
+	function fadeInStartPage() {
+		$startingPage.fadeIn();
+		$gamePage.fadeOut();
+		$postGameModal.fadeOut();
 	}
 
-	function showGamePage() {
-		$startingPage.hide();
-		$gamePage.show();
-		$postGameModal.hide();
+	function fadeInGamePage() {
+		$gamePage.fadeIn();
+		$postGameModal.fadeOut();
 	}
 
-	function showPostGameModal() {
-		$startingPage.hide();
-		$gamePage.hide();
-		$postGameModal.show();
+	function fadeInPostGameModal() {
+		$gamePage.fadeOut();
+		$postGameModal.fadeIn();
 	}
-	
-	//API
-	var getPhotosApiUrl = "http://pixlee-ugc-game.herokuapp.com/getphotos/";
-	var sendDataApiUrl = "http://pixlee-ugc-game.herokuapp.com/users/signup";
+	//API Consumption and Object Array creation
+	var getPhotosApiUrl = 'http://pixlee-ugc-game.herokuapp.com/getphotos/';
+	var endpointUrl = 'http://pixlee-ugc-game.herokuapp.com/users/signup';
+	var leaderboardUrl = 'http://pixlee-ugc-game.herokuapp.com/score/';
 	var itemArray = [];
 	var ugcArray = [];
 	var proArray = [];
-	
-	function getPhotos(type, count){
+
+	function getPhotos(type, count) {
 		$.ajax({
-			dataType: 'json',
-			url: getPhotosApiUrl + '' + type + '/' + count,
-			success: photosRetrieved,
-			error: errorFunc
+			dataType: 'json'
+			, url: getPhotosApiUrl + '' + type + '/' + count
+			, success: photosRetrieved
+			, error: errorFunc
 		});
 	}
-	
+
 	function photosRetrieved(data) {
-		
-		$.each(data, function(index, value) {
-			if (data[index].type === "ugc") {
+		$.each(data, function (index, value) {
+			if (data[index].type === 'ugc') {
 				ugcArray.push(value);
 			}
-			else if(data[index].type === "pro") {
+			else if (data[index].type === 'pro') {
 				proArray.push(value);
 			}
 		});
-		
-		itemArray = $.merge(ugcArray,proArray);
+		itemArray = $.merge(ugcArray, proArray);
 		itemArray = shuffleArray(itemArray);
 	}
-	
+
 	function shuffleArray(array) {
-    for (var i = array.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
-    }
-    return array;
-}
+		for (var i = array.length - 1; i > 0; i--) {
+			var j = Math.floor(Math.random() * (i + 1));
+			var temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+
 	function errorFunc(err) {
 		console.log(err);
 	}
 	//Starting Page
-	getPhotos("ugc", 10);
-	getPhotos("pro", 10);
 	//Game Page
+	var currentImage = 0;
+	var playerScore = 0;
+	var picsRemaining = 15;
+	var $scoreBadge = $('.badge.score');
+	var $picsRemainingBadge = $('.badge.pics-remaining');
+	var $imagesContainer = ('#images');
 
+	function loadImages() {
+		for (var item = 0; item < itemArray.length; item++) {
+			$('<img>', {
+				id: 'imgThumb' + item
+				, class: 'img-thumbnail'
+				, style: 'display: none;'
+				, src: itemArray[item].url
+			}).appendTo($imagesContainer);
+		}
+		$('#imgThumb0').show();
+	}
+
+	function nextImage() {
+		if (currentImage === 15) {
+			$postGameModal.modal({
+				backdrop: 'static'
+			});
+		}
+		else {
+			$('#imgThumb' + (currentImage - 1)).hide();
+			$('#imgThumb' + currentImage).show();
+		}
+	}
 	//Post Game Modal
 	var $playAgainBtn = $('#playAgain');
 	var $quitBtn = $('#quit');
-	//Click Events
+	var userName = $('#playerName');
+	var userEmail = $('#playerEmail');
 
-	$('#startGame').on('click', function(){
-		showGamePage();
-	});
-	$('#finishGame').on('click', function(){
-		$postGameModal.modal({
-			backdrop: 'static'
+	function submitPlayerInfo(func) {
+		userName = userName.val();
+		userEmail = userEmail.val();
+		$.ajax({
+			url: endpointUrl
+			, type: 'post'
+			, data: {
+				email: userEmail
+				, name: userName
+				, score: playerScore
+			}
+			, success: function (response) {
+				resetGame();
+				func;
+			}
+			, error: function (error) {
+				console.log(JSON.stringify(error));
+			}
 		});
+	}
+	$playAgainBtn.on('click', function (event) {
+		submitPlayerInfo(fadeInGamePage());
+		console.log("PlayAgain: ", userName, userEmail, endpointUrl);
 	});
-	$playAgainBtn.on('click', function(){
-		showGamePage();
+	$quitBtn.on('click', function (event) {
+		submitPlayerInfo(fadeInStartPage());
+		console.log("QUIT: ", userName, userEmail, endpointUrl);
 	});
-	$quitBtn.on('click', function(){
-		showStartPage();
+	//Click Events
+	$('#proBtn').on('click', function () {
+		console.log("PROF: ", itemArray[currentImage].type, currentImage);
+		if (itemArray[currentImage].type === 'pro') {
+			console.log('proPro');
+			playerScore++;
+			$scoreBadge.text(playerScore);
+		}
+		else if (itemArray[currentImage].type === 'ugc') {
+			console.log('ugcPro');
+		}
+		currentImage++;
+		picsRemaining--;
+		$picsRemainingBadge.text(picsRemaining);
+		nextImage();
 	});
-	
+	$('#amateurBtn').on('click', function () {
+		console.log("AMA: ", itemArray[currentImage].type, currentImage);
+		if (itemArray[currentImage].type === 'ugc') {
+			console.log('ugcUgc');
+			playerScore++;
+			$scoreBadge.text(playerScore);
+		}
+		else if (itemArray[currentImage].type === 'pro') {
+			console.log('proUgc');
+		}
+		currentImage++;
+		picsRemaining--;
+		$picsRemainingBadge.text(picsRemaining);
+		nextImage();
+	});
+	$('#startGame').on('click', function () {
+		fadeInGamePage();
+		getPhotos('ugc', 10);
+		getPhotos('pro', 10);
+		setTimeout(function () {
+			loadImages();
+		}, 500)
+		console.log("Start Game: ", currentImage);
+	});
+
+	function resetGame() {
+		playerScore = 0;
+		currentImage = 0;
+		picsRemaining = 15;
+		itemArray = [];
+		ugcArray = [];
+		proArray = [];
+		$($imagesContainer).find('img').remove();
+		$scoreBadge.text('0');
+		$picsRemainingBadge.text('15');
+	}
 })
